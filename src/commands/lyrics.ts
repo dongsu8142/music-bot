@@ -28,7 +28,7 @@ export class LyricsCommand extends Command {
   }
 
   public override async chatInputRun(
-    interaction: Command.ChatInputCommandInteraction
+    interaction: Command.ChatInputCommandInteraction,
   ) {
     const queue = useQueue(interaction.guild!.id);
     const track =
@@ -53,7 +53,7 @@ export class LyricsCommand extends Command {
         url: lyrics.artist.url,
       })
       .setDescription(
-        trimmedLyrics.length === 1997 ? `${trimmedLyrics}...` : trimmedLyrics
+        trimmedLyrics.length === 1997 ? `${trimmedLyrics}...` : trimmedLyrics,
       )
       .setColor("Yellow");
 

@@ -12,14 +12,12 @@ export class SkipCommand extends Command {
 
   public override registerApplicationCommands(registry: Command.Registry) {
     registry.registerChatInputCommand((builder) => {
-      builder
-        .setName(this.name)
-        .setDescription(this.description);
+      builder.setName(this.name).setDescription(this.description);
     });
   }
 
   public override async chatInputRun(
-    interaction: Command.ChatInputCommandInteraction
+    interaction: Command.ChatInputCommandInteraction,
   ) {
     const queue = useQueue(interaction.guild!.id);
     const permissions = this.container.client.perms.voice(interaction);
@@ -34,7 +32,11 @@ export class SkipCommand extends Command {
         content: `현재 노래를 재생 중이지 않습니다.`,
         ephemeral: true,
       });
-    if (permissions.clientToMember()) return interaction.reply({ content: permissions.clientToMember(), ephemeral: true });
+    if (permissions.clientToMember())
+      return interaction.reply({
+        content: permissions.clientToMember(),
+        ephemeral: true,
+      });
 
     queue.node.skip();
     return interaction.reply({

@@ -9,7 +9,7 @@ import {
 export class PlayerEvent extends Listener {
   public constructor(
     context: Listener.LoaderContext,
-    options: Listener.Options
+    options: Listener.Options,
   ) {
     super(context, {
       ...options,
@@ -23,7 +23,7 @@ export class PlayerEvent extends Listener {
       channel: GuildTextBasedChannel;
       client: GuildMember;
       requestedBy: string;
-    }>
+    }>,
   ) {
     const resolved = new PermissionsBitField([
       PermissionsBitField.Flags.SendMessages,

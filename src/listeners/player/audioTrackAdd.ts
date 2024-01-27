@@ -9,7 +9,7 @@ import {
 export class PlayerEvent extends Listener {
   public constructor(
     context: Listener.LoaderContext,
-    options: Listener.Options
+    options: Listener.Options,
   ) {
     super(context, {
       ...options,
@@ -24,7 +24,7 @@ export class PlayerEvent extends Listener {
       client: GuildMember;
       requestedBy: string;
     }>,
-    track: Track
+    track: Track,
   ) {
     const resolved = new PermissionsBitField([
       PermissionsBitField.Flags.SendMessages,
@@ -50,17 +50,12 @@ export class PlayerEvent extends Listener {
             {
               name: "재생 길이",
               value: track.duration,
-              inline: true,
+              inline: false,
             },
             {
               name: "조회수",
               value: `${track.views}`,
-              inline: true,
-            },
-            {
-              name: "신청인",
-              value: queue.metadata.requestedBy,
-              inline: true,
+              inline: false,
             },
           ],
         },

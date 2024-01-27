@@ -27,13 +27,13 @@ export class LoopCommand extends Command {
             .setName("모드")
             .setDescription("모드를 선택해 주세요.")
             .setRequired(true)
-            .addChoices(...repeatModes)
+            .addChoices(...repeatModes),
         );
     });
   }
 
   public override async chatInputRun(
-    interaction: Command.ChatInputCommandInteraction
+    interaction: Command.ChatInputCommandInteraction,
   ) {
     const queue = useQueue(interaction.guild!.id);
     const permissions = this.container.client.perms.voice(interaction);
@@ -48,7 +48,11 @@ export class LoopCommand extends Command {
         content: `현재 노래를 재생 중이지 않습니다.`,
         ephemeral: true,
       });
-    if (permissions.clientToMember()) return interaction.reply({ content: permissions.clientToMember(), ephemeral: true });
+    if (permissions.clientToMember())
+      return interaction.reply({
+        content: permissions.clientToMember(),
+        ephemeral: true,
+      });
 
     const mode = interaction.options.getNumber("모드", true);
     const name =

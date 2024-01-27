@@ -27,7 +27,7 @@ export class PlayCommand extends Command {
   }
 
   public override async autocompleteRun(
-    interaction: Command.AutocompleteInteraction
+    interaction: Command.AutocompleteInteraction,
   ) {
     const query = interaction.options.getString("제목");
     if (!query) return [];
@@ -60,17 +60,29 @@ export class PlayCommand extends Command {
   }
 
   public override async chatInputRun(
-    interaction: Command.ChatInputCommandInteraction
+    interaction: Command.ChatInputCommandInteraction,
   ) {
     const player = useMainPlayer();
     const member = interaction.member as GuildMember;
     const permissions = this.container.client.perms.voice(interaction);
-    if (permissions.member()) return interaction.reply({ content: permissions.member(), ephemeral: true });
-    if (permissions.client()) return interaction.reply({ content: permissions.client(), ephemeral: true });
+    if (permissions.member())
+      return interaction.reply({
+        content: permissions.member(),
+        ephemeral: true,
+      });
+    if (permissions.client())
+      return interaction.reply({
+        content: permissions.client(),
+        ephemeral: true,
+      });
 
     const query = interaction.options.getString("제목");
 
-    if (permissions.clientToMember()) return interaction.reply({ content: permissions.clientToMember(), ephemeral: true });
+    if (permissions.clientToMember())
+      return interaction.reply({
+        content: permissions.clientToMember(),
+        ephemeral: true,
+      });
     await interaction.deferReply();
     const results = await player.search(query!, {
       requestedBy: interaction.user,
