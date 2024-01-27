@@ -50,12 +50,17 @@ export class PlayerEvent extends Listener {
             {
               name: "재생 길이",
               value: track.duration,
-              inline: false,
+              inline: true,
             },
             {
               name: "조회수",
               value: `${track.views}`,
-              inline: false,
+              inline: true,
+            },
+            {
+              name: "신청인",
+              value: track.requestedBy?.displayName!,
+              inline: true,
             },
           ],
         },

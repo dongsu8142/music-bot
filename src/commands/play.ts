@@ -2,6 +2,8 @@ import { Command } from "@sapphire/framework";
 import { QueryType, useMainPlayer } from "discord-player";
 import type { GuildMember } from "discord.js";
 
+type SearchEngine = (typeof QueryType)[keyof typeof QueryType];
+
 export class PlayCommand extends Command {
   public constructor(context: Command.LoaderContext, options: Command.Options) {
     super(context, {
@@ -19,9 +21,20 @@ export class PlayCommand extends Command {
         .addStringOption((option) => {
           return option
             .setName("제목")
-            .setDescription("노래 제목을 입력하세요")
+            .setDescription("노래 제목을 입력하세요.")
             .setRequired(true)
             .setAutocomplete(true);
+        })
+        .addStringOption((option) => {
+          return option
+            .setName("엔진")
+            .setDescription("노래를 재생할 엔진을 선택해 주세요.")
+            .addChoices(
+              { name: "유튜브", value: QueryType.YOUTUBE_SEARCH },
+              { name: "스포티파이", value: QueryType.SPOTIFY_SEARCH },
+              { name: "애플 뮤직", value: QueryType.APPLE_MUSIC_SEARCH },
+              { name: "사운드클라우드", value: QueryType.SOUNDCLOUD_SEARCH },
+            );
         });
     });
   }
@@ -29,6 +42,7 @@ export class PlayCommand extends Command {
   public override async autocompleteRun(
     interaction: Command.AutocompleteInteraction,
   ) {
+    const engine = interaction.options.getString("엔진") as SearchEngine | null;
     const query = interaction.options.getString("제목");
     if (!query) return [];
 
@@ -36,13 +50,13 @@ export class PlayCommand extends Command {
 
     const results = await player.search(query, {
       requestedBy: interaction.user,
-      fallbackSearchEngine: QueryType.YOUTUBE_SEARCH,
+      fallbackSearchEngine: engine ? engine : QueryType.YOUTUBE_SEARCH,
     });
 
     let tracks;
     tracks = results.tracks
       .map((t) => ({
-        name: t.title,
+        name: `${t.title} by ${t.author}`,
         value: t.url,
       }))
       .slice(0, 10);
@@ -76,6 +90,7 @@ export class PlayCommand extends Command {
         ephemeral: true,
       });
 
+    const engine = interaction.options.getString("엔진") as SearchEngine | null;
     const query = interaction.options.getString("제목");
 
     if (permissions.clientToMember())
@@ -86,7 +101,7 @@ export class PlayCommand extends Command {
     await interaction.deferReply();
     const results = await player.search(query!, {
       requestedBy: interaction.user,
-      fallbackSearchEngine: QueryType.YOUTUBE_SEARCH,
+      fallbackSearchEngine: engine ? engine : QueryType.YOUTUBE_SEARCH,
     });
 
     if (!results.hasTracks())
